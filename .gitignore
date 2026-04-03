@@ -39,3 +39,23 @@
 
 # debug information files
 *.dwo
+
+# Visual Studio 缓存
+.vs/
+*.ipch
+
+# 编译输出目录
+**/[Dd]ebug/
+**/[Rr]elease/
+**/x64/
+**/x86/
+
+# 编译产生的中间文件
+*.obj
+*.tlog
+*.idb
+*.pdb
+*.ilk
+*.exe
+*.exe.recipe
+*.log
