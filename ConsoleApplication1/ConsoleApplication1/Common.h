@@ -6,9 +6,19 @@ using std::endl;
 #include<vector>
 #include<time.h>
 #include<assert.h>
+#include<mutex>
+#include<cmath>
 #include<thread>
 static const size_t MAX_BYTES = 256 * 1024;
 static const size_t NFREE_LIST = 208;
+
+#ifdef _WIN64
+typedef unsigned long long PAGE_ID;
+#elif _WIN32
+typedef size_t PAGE_ID;
+
+#endif
+
 
 static void*& NextObj(void* obj) {
 	return *(void**)obj;
@@ -36,8 +46,12 @@ public:
 	bool Empty() {
 		return _freeList == nullptr;
 	}
+	size_t& MaxSize() {
+		return _maxSize;
+	}
 private:
 	void* _freeList=nullptr;
+	size_t _maxSize = 1;
 };
 
 class SizeClass {
@@ -112,6 +126,67 @@ public:
 		return -1;
 	}
 
+	static size_t NumMoveSize(size_t size) {
+		assert(size > 0);
+		int num = MAX_BYTES / size;
+		if (num < 2)num = 2;
+		if (num > 512)num = 512;
+		return num;
+	}
+
 private:
 
+};
+
+//管理多个连续页大块内存跨度结构
+class Span {
+public:
+	PAGE_ID _pageId=0;//大块内存起始页号
+	size_t _n=0;//页的数量
+
+	Span* _next=nullptr;//双向链表
+	Span* _prev=nullptr;
+
+	size_t _useCount=0;//切好小块内存，被分配给thread cache计数
+	void* _freeList=nullptr;//切好的小块内存自由链表 
+};
+
+class SpanList {
+public:
+	SpanList() {
+		_head = new Span;
+		_head->_next = _head;
+		_head->_prev = _head;
+	}
+
+	void Insert(Span* pos, Span* newSpan) {
+		assert(pos);
+		assert(newSpan);
+		Span* prev = pos->_prev;
+		prev->_next = newSpan;
+		newSpan->_prev = prev;
+		newSpan->_next = pos;
+		pos->_prev = newSpan;
+
+	}
+
+	void Erase(Span* pos) {
+		assert(pos);
+		assert(pos != _head);
+
+		Span* prev = pos->_prev;
+		Span* next= pos->_next;
+
+		prev->_next = next;
+		next->_prev = prev;
+
+
+	}
+
+
+
+
+private:
+	Span* _head;
+	std::mutex _mtx;//桶锁
 };

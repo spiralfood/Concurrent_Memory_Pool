@@ -5,7 +5,16 @@
 #include"ThreadCache.h"
 
 void* ThreadCache::FetchFromCentralCache(size_t index, size_t size) {
+	//慢开始反馈调节算法
+	//1.最开始不会向central cache一次性要太多，要太多可能用不完
+	//2.如果不要这个size大小内存需求，batchNum就会不断增长，直到上限
+	size_t batchNum = std::min(_freeLists[index].MaxSize(), SizeClass::NumMoveSize(size));
+	void* start = nullptr;
+	void* end = nullptr;
 
+	if (_freeLists[index].MaxSize() == batchNum) {
+		_freeLists[index].MaxSize() += 1;
+	}
 	return nullptr;
 }
 
