@@ -21,6 +21,15 @@
     <ClCompile Include="UnitTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CentralCache.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PageCache.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BenchMark.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObjectPool.h">
@@ -36,6 +45,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CentralCache.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PageCache.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -22,10 +22,35 @@ void TLSTest() {
 	t2.join();
 }
 
-int main() {
-
-	//TestObjectPool();
-	TLSTest();
-	Alloc2();
-	return 0;
+void TestConcurrentAlloc1() {
+	void* p1 = ConcurrentAlloc(6);
+	void* p2 = ConcurrentAlloc(7);
+	void* p3 = ConcurrentAlloc(1);
+	void* p4 = ConcurrentAlloc(2);
+	void* p5 = ConcurrentAlloc(3);
 }
+
+void TestConcurrentAlloc2() {
+	void* p1 = ConcurrentAlloc(6);
+	
+	ConcurrentFree(p1);
+}
+
+	void BigAlloc() {
+		void* p1 = ConcurrentAlloc(257 * 1024);
+		ConcurrentFree(p1);
+		void* p2 = ConcurrentAlloc(129*8 * 1024);
+		ConcurrentFree(p2);
+
+	}
+
+	//int main() {
+
+	//	//TestObjectPool();
+	//	//TLSTest();
+	//	//Alloc2();
+	//	//TestConcurrentAlloc1();
+	//	//TestConcurrentAlloc2();
+	//	BigAlloc();
+	//	return 0;
+	//}

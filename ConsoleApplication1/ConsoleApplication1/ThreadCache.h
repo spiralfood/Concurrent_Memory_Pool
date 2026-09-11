@@ -10,6 +10,9 @@ public:
 
 	//从中心缓存获取对象
 	void* FetchFromCentralCache(size_t index, size_t size);
+	//太长了
+	void ListTooLong(FreeList& list, size_t size);
+
 private:
 	FreeList  _freeLists[NFREE_LIST];
 	

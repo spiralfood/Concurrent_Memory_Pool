@@ -5,10 +5,15 @@
 //µ¥ÀýÄ£Ê½
 class CentralCache {
 public:
-	CentralCache* GetInstance() {
+	static CentralCache* GetInstance() {
 		return &_sInit;
 	}
-	size_t FetchRangeObj(void*& start, void*& end, size_t n, size_t byte_size);
+
+	Span* GetOneSpan(SpanList& list, size_t size);
+
+	size_t FetchRangeObj(void*& start, void*& end, size_t n, size_t size);
+
+	void ReleaseListToSpans(void* start, size_t byte_size);
 private:
 	SpanList _spanLists[NFREE_LIST];
 	static CentralCache _sInit;
